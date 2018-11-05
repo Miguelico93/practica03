@@ -147,3 +147,68 @@ Vagrant.configure("2") do |config|
 
 end
 ```
+
+## Scripts
+
+### script de apache
+
+```
+#!/bin/bash
+
+# instalacion de apache
+apt-get update
+apt-get install -y apache2
+apt-get install -y php libapache2-mod-php php-mysql
+sudo /etc/init.d/apache2 restart
+
+
+#clonar repositorios
+apt-get install -y git
+cd /tmp
+rm -rf iaw-practica-lamp 
+git clone https://github.com/josejuansanchez/iaw-practica-lamp.git
+
+#copiar repositorio
+
+cd iaw-practica-lamp
+cp src/* /var/www/html/
+
+#modificar la base de datos que queremos usar
+
+sed -i 's/localhost/192.168.33.11/' /var/www/html/config.php
+chown www-data:www-data /var/www/html/* -R
+
+#borramos el index
+
+rm -rf /var/www/html/index.html
+```
+
+### Script de MySQL
+
+```
+#!/bin/bash
+apt-get update
+apt-get -y install debconf-utils
+
+DB_ROOT_PASSWD=root
+debconf-set-selections <<< "mysql-server mysql-server/root_password password $DB_ROOT_PASSWD"
+debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $DB_ROOT_PASSWD"
+
+apt-get install -y mysql-server
+sed -i -e 's/127.0.0.1/0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
+#/etc/init.d/mysql restart
+
+#mysql -uroot mysql -p$DB_ROOT_PASSWD <<< "GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY '$DB_ROOT_PASSWD'; FLUSH PRIVILEGES;"
+
+#clonar repositorios
+apt-get install -y git
+cd /tmp
+rm -rf iaw-practica-lamp 
+git clone https://github.com/josejuansanchez/iaw-practica-lamp.git
+
+#crear base de datos
+mysql -u root -p$DB_ROOT_PASSWD < /tmp/iaw-practica-lamp/db/database.sql
+
+/etc/init.d/mysql restart
+
+```
