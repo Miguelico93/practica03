@@ -106,8 +106,20 @@ lo que nos devolvera el siguiente resultado:
 +------------------------------------------------+
 ```
 
+## Comprobación de inicio de sesion en MySQLServer
 
+Conectaremos con MySQL desde la máquina de ApacheHTTP para ello tendremos que loguearnos con nuestro usuario por lo que emplearemos el comando:
 
+```
+mysql -u USERNAME -p -h IP-SERVIDOR-MYSQL
+```
 
+Tambien podemos hacer un telnet al puerto donde esta corriendo MySQL.
+
+```
+telnet IP-SERVIDOR-MYSQL 3306
+```
+
+En caso que no podamos conectar al servicio MySQL comprobaremos que el servicio esta habilitado y tambien comprobaremos que los puertos que emplea esten abiertos.
 
 
