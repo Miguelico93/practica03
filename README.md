@@ -122,4 +122,28 @@ telnet IP-SERVIDOR-MYSQL 3306
 
 En caso que no podamos conectar al servicio MySQL comprobaremos que el servicio esta habilitado y tambien comprobaremos que los puertos que emplea esten abiertos.
 
+## VagrantFile
+```
+ #-*- mode: ruby -*-
+ #vi: set ft=ruby :
 
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "ubuntu/xenial64"
+
+   #Apache HTTP Server
+  config.vm.define "web" do |app|
+    app.vm.hostname = "web"
+    app.vm.network "public_network", ip: "192.168.33.10"
+    app.vm.provision "shell", path: "apache.sh"
+  end
+
+   #MySQL Server
+  config.vm.define "db" do |app|
+    app.vm.hostname = "db"
+    app.vm.network "public_network", ip: "192.168.33.11"
+    app.vm.provision "shell", path: "mysql.sh"
+  end
+
+end
+```
